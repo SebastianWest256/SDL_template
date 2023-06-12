@@ -2,16 +2,11 @@
 
 void setPixelColor(SDL_Surface* surface, int x, int y, Uint32 color) {
 
-    //bounds checking \/
-    //x = std::max(x, 0);
-    //x = std::min(x, screenWidth - 1);
-    //y = std::max(y, 0);
-    //y = std::min(y, screenHeight - 1);
     Uint32* pixels = (Uint32*)surface->pixels;
     pixels[y * surface->w + x] = color;
 }
 
-void drawLine(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color) {
+void draw_line(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color) {
     int dx = abs(x2 - x1);
     int dy = abs(y2 - y1);
     int sx = x1 < x2 ? 1 : -1;
@@ -34,7 +29,7 @@ void drawLine(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color
     }
 }
 
-void drawThickLine(SDL_Surface* surface, int x1, int y1, int x2, int y2, int thickness, Uint32 color) {
+void draw_thick_line(SDL_Surface* surface, int x1, int y1, int x2, int y2, int thickness, Uint32 color) {
     int dx = abs(x2 - x1);
     int dy = abs(y2 - y1);
     int sx = x1 < x2 ? 1 : -1;
@@ -65,7 +60,7 @@ void drawThickLine(SDL_Surface* surface, int x1, int y1, int x2, int y2, int thi
     }
 }
 
-void drawSquare(SDL_Surface* surface, int x, int y, int sideLength, Uint32 color) {
+void draw_square(SDL_Surface* surface, int x, int y, int sideLength, Uint32 color) {
     SDL_Rect square;
     square.x = x;
     square.y = y;
@@ -74,7 +69,7 @@ void drawSquare(SDL_Surface* surface, int x, int y, int sideLength, Uint32 color
     SDL_FillRect(surface, &square, color);
 }
 
-void drawSquareOutline(SDL_Surface* surface, int x, int y, int side, int thickness, Uint32 color) {
+void draw_square_outline(SDL_Surface* surface, int x, int y, int side, int thickness, Uint32 color) {
     for (int i = 0; i < side; i++) {
         for (int j = 0; j < thickness; j++) {
             if (x + i >= 0 && x + i < surface->w && y + j >= 0 && y + j < surface->h) {
@@ -96,7 +91,7 @@ void drawSquareOutline(SDL_Surface* surface, int x, int y, int side, int thickne
 }
 
 //misses pixels
-void drawRotatedSquare(SDL_Surface* surface, int x, int y, int side, float angle, Uint32 color)
+void draw_rotated_square(SDL_Surface* surface, int x, int y, int side, float angle, Uint32 color)
 {
     float c = cos(angle);
     float s = sin(angle);
@@ -116,7 +111,7 @@ void drawRotatedSquare(SDL_Surface* surface, int x, int y, int side, float angle
     }
 }
 
-void drawRectangle(SDL_Surface* surface, int x, int y, int w, int h, Uint32 color) {
+void draw_rectangle(SDL_Surface* surface, int x, int y, int w, int h, Uint32 color) {
     SDL_Rect rect;
     rect.x = x;
     rect.y = y;
@@ -125,7 +120,7 @@ void drawRectangle(SDL_Surface* surface, int x, int y, int w, int h, Uint32 colo
     SDL_FillRect(surface, &rect, color);
 }
 
-void drawRectangleOutline(SDL_Surface* surface, int x, int y, int w, int h, int thickness, Uint32 color) {
+void draw_rectangle_outline(SDL_Surface* surface, int x, int y, int w, int h, int thickness, Uint32 color) {
     for (int i = 0; i < w; i++) {
         for (int j = 0; j < thickness; j++) {
             if (x + i >= 0 && x + i < surface->w && y + j >= 0 && y + j < surface->h) {
@@ -154,7 +149,7 @@ void drawRectangleOutline(SDL_Surface* surface, int x, int y, int w, int h, int 
 }
 
 //misses pixels
-void drawRotatedRectangle(SDL_Surface* surface, int x, int y, int w, int h, float angle, Uint32 color) {
+void draw_rotated_rectangle(SDL_Surface* surface, int x, int y, int w, int h, float angle, Uint32 color) {
     float c = cos(angle);
     float s = sin(angle);
     int half_w = w / 2;
@@ -171,7 +166,7 @@ void drawRotatedRectangle(SDL_Surface* surface, int x, int y, int w, int h, floa
     }
 }
 
-void drawCircle(SDL_Surface* surface, int x, int y, int radius, Uint32 color) {
+void draw_circle(SDL_Surface* surface, int x, int y, int radius, Uint32 color) {
     for (int i = -radius; i <= radius; i++) {
         for (int j = -radius; j <= radius; j++) {
             if (i * i + j * j <= radius * radius) {
@@ -186,7 +181,7 @@ void drawCircle(SDL_Surface* surface, int x, int y, int radius, Uint32 color) {
     }
 }
 
-void drawCircleOutline(SDL_Surface* surface, int x, int y, int r, int thickness, Uint32 color) {
+void draw_circle_outline(SDL_Surface* surface, int x, int y, int r, int thickness, Uint32 color) {
     for (int i = -r; i <= r; i++) {
         for (int j = -r; j <= r; j++) {
             if (i * i + j * j <= r * r && i * i + j * j > (r - thickness) * (r - thickness)) {
@@ -201,7 +196,7 @@ void drawCircleOutline(SDL_Surface* surface, int x, int y, int r, int thickness,
     }
 }
 
-bool isInsideTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y) {
+bool is_inside_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y) {
     float denominator = ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
     float a = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3)) / denominator;
     float b = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3)) / denominator;
@@ -209,7 +204,7 @@ bool isInsideTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int x, int
     return (a >= 0) && (a <= 1) && (b >= 0) && (b <= 1) && (c >= 0) && (c <= 1);
 }
 
-void drawTriangle(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color) {
+void draw_triangle(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color) {
     int min_x = std::min(x1, std::min(x2, x3));
     int max_x = std::max(x1, std::max(x2, x3));
     int min_y = std::min(y1, std::min(y2, y3));
@@ -217,7 +212,7 @@ void drawTriangle(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, 
 
     for (int x = min_x; x <= max_x; x++) {
         for (int y = min_y; y <= max_y; y++) {
-            if (isInsideTriangle(x1, y1, x2, y2, x3, y3, x, y)) {
+            if (is_inside_triangle(x1, y1, x2, y2, x3, y3, x, y)) {
                 Uint32* pixels = (Uint32*)surface->pixels;
                 pixels[y * surface->w + x] = color;
             }
@@ -225,13 +220,13 @@ void drawTriangle(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, 
     }
 }
 
-void drawTriangleOutline(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, int thickness, Uint32 color) {
-    drawThickLine(surface, x1, y1, x2, y2, thickness, color);
-    drawThickLine(surface, x2, y2, x3, y3, thickness, color);
-    drawThickLine(surface, x3, y3, x1, y1, thickness, color);
+void draw_triangle_outline(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, int thickness, Uint32 color) {
+    draw_thick_line(surface, x1, y1, x2, y2, thickness, color);
+    draw_thick_line(surface, x2, y2, x3, y3, thickness, color);
+    draw_thick_line(surface, x3, y3, x1, y1, thickness, color);
 }
 
-void drawEllipse(SDL_Surface* surface, int x, int y, int rx, int ry, Uint32 color) {
+void draw_ellipse(SDL_Surface* surface, int x, int y, int rx, int ry, Uint32 color) {
     for (int i = -rx; i <= rx; i++) {
         for (int j = -ry; j <= ry; j++) {
             if (i * i * ry * ry + j * j * rx * rx <= rx * rx * ry * ry) {
@@ -247,7 +242,7 @@ void drawEllipse(SDL_Surface* surface, int x, int y, int rx, int ry, Uint32 colo
 }
 
 //misses some edge pixels
-void drawEllipseOutline(SDL_Surface* surface, int x, int y, int rx, int ry, Uint32 color, int thickness) {
+void draw_ellipse_outline(SDL_Surface* surface, int x, int y, int rx, int ry, Uint32 color, int thickness) {
     int rxSq = rx * rx;
     int rySq = ry * ry;
     int x1 = 0, y1 = ry;
@@ -319,24 +314,20 @@ void drawEllipseOutline(SDL_Surface* surface, int x, int y, int rx, int ry, Uint
     }
 }
 
-void drawBezierCurve(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, Uint32 color) {
-    // The number of steps for drawing the curve
+void draw_bezier_curve(SDL_Surface* surface, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, Uint32 color) {
+
     int steps = 50;
 
-    // The current position of the curve
     double x = x1, y = y1;
 
-    // The step size
     double t_step = 1.0 / steps;
 
-    // Loop over the steps
     for (int i = 0; i <= steps; i++) {
-        // Calculate the position of the curve at this step
+
         double t = i * t_step;
         x = pow(1 - t, 3) * x1 + 3 * t * pow(1 - t, 2) * x2 + 3 * pow(t, 2) * (1 - t) * x3 + pow(t, 3) * x4;
         y = pow(1 - t, 3) * y1 + 3 * t * pow(1 - t, 2) * y2 + 3 * pow(t, 2) * (1 - t) * y3 + pow(t, 3) * y4;
 
-        // Draw the pixel on the surface
         if (x >= 0 && x < surface->w && y >= 0 && y < surface->h) {
             Uint32* pixels = (Uint32*)surface->pixels;
             pixels[(int)y * surface->w + (int)x] = color;
