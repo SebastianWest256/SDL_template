@@ -18,6 +18,7 @@ std::unordered_map<int, char> char_map = {
 
 struct input {
     bool mouse_pressed = false;
+    bool mouse_reset = true;
     int mouse_x = 0;
     int mouse_y = 0;
     std::vector<bool> key_pressed;
@@ -110,7 +111,7 @@ void handle_textboxes(SDL_Surface* surface, std::vector<textbox>* textbox, int* 
         (*textbox)[i].draw(surface);
     }
 
-    if ((*current_input).mouse_pressed) {
+    if ((*current_input).mouse_pressed && (*current_input).mouse_reset) {
         *using_textbox = false;
         for (int i = 0; i < (*textbox).size(); i++) {
             if ((*current_input).mouse_x > (*textbox)[i].x && (*current_input).mouse_x < (*textbox)[i].x_bound &&
@@ -138,7 +139,6 @@ void handle_textboxes(SDL_Surface* surface, std::vector<textbox>* textbox, int* 
 
     if (char_to_int(input_to_char(*current_input)) != -1) {
         if ((*current_input).key_reset[char_to_int(input_to_char(*current_input))]) {
-            std::cout << input_to_char(*current_input) << std::endl;
             if (*active_textbox >= 0) {
                 if ((*textbox)[*active_textbox].active_char < (*textbox)[*active_textbox].max_chars) {
                     (*textbox)[*active_textbox].text += input_to_char(*current_input);

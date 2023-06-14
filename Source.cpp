@@ -49,6 +49,7 @@ SDL_Surface* get_window_surface(SDL_Window* window) {
 input handle_events(bool& running, input current_input) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+        if (current_input.mouse_pressed)current_input.mouse_reset = false;
             current_input.mouse_x = event.button.x;
             current_input.mouse_y = event.button.y;
         if (event.type == SDL_QUIT) {
@@ -62,6 +63,7 @@ input handle_events(bool& running, input current_input) {
         else if (event.type == SDL_MOUSEBUTTONUP) {
             if (event.button.button == SDL_BUTTON_LEFT) {
                 current_input.mouse_pressed = false;
+                current_input.mouse_reset = true;
             }
         }
         else if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
@@ -142,7 +144,6 @@ int main(int argc, char* argv[]) {
             }
             inputFile.close();
         }
-
     }
    
 
@@ -156,13 +157,12 @@ int main(int argc, char* argv[]) {
         frameStart = SDL_GetTicks();
 
         //loop start
-        
+
         auto now = std::chrono::high_resolution_clock::now();
         last_duration = duration;
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
        
-
-        std::cout << duration.count() - last_duration.count() << std::endl;
+        std::cout << duration.count() - last_duration.count() << "ms" << std::endl;
 
         draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
        
