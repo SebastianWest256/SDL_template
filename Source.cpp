@@ -70,7 +70,6 @@ input handle_events(bool& running, input current_input) {
                 }
             }
         }
-        
     }
     return current_input;
 }
@@ -97,11 +96,19 @@ int main(int argc, char* argv[]) {
 
     //init start
 
-    std::vector<textbox> textbox(std::vector<textbox>(2));
+    std::vector<textbox> textbox(std::vector<textbox>(3));
     textbox[0].init(400, 400, 4, 11, 0xBBBBBB, 0x777777, 0x444444);
     textbox[1].init(400, 200, 7, 5, 0xBBBBBB, 0x777777, 0x444444);
+    textbox[2].init(100, 600, 3, 30, 0xBBBBBB, 0x777777, 0x444444);
     int active_textbox = -1;
     bool using_textbox = false;
+
+    std::vector<button> button(std::vector<button>(3));
+
+    button[0].init(500, 500, 3, "HEY", 0xBBBBBB, 0x777777, 0x444444);
+    button[1].init(600, 500, 4, "EZZ", 0xBBBBBB, 0x777777, 0x444444);
+    button[2].init(700, 500, 5, "999", 0xBBBBBB, 0x777777, 0x444444);
+
     //init end
 
     SDL_UpdateWindowSurface(window);
@@ -114,6 +121,8 @@ int main(int argc, char* argv[]) {
         //loop start
 
         draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
+
+        handle_buttons(screen, &button);
 
         handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
 

@@ -145,3 +145,54 @@ void handle_textboxes(SDL_Surface* surface, std::vector<textbox>* textbox, int* 
     }
 
 }
+
+class button {
+public:
+
+    int x, y;
+    int text_size;
+    int x_bound, y_bound;
+    std::string text;
+    Uint32 text_color;
+    Uint32 box_color;
+    Uint32 border_color;
+
+    void init(int x_in, int y_in, int text_size_in, std::string text_in, Uint32 text_color_in, Uint32 box_color_in, Uint32 border_color_in) {
+
+
+        x = x_in;
+        y = y_in;
+        text_size = text_size_in;
+        text = text_in;
+        text_color = text_color_in;
+        box_color = box_color_in;
+        border_color = border_color_in;
+        x_bound = x + text_size * (text_in.length() * 6 + 3);
+        y_bound = y + text_size * 9;
+
+    }
+
+    void draw(SDL_Surface* surface) {
+
+        draw_rectangle(surface, x, y, x_bound - x, y_bound - y + text_size * 2, border_color);
+        draw_rectangle(surface, x + text_size, y + text_size, x_bound - x - text_size * 2, y_bound - y - text_size * 2 + text_size * 2, box_color);
+
+        for (int i = 0; i < text.length(); i++) {
+
+            draw_char(surface, text[i], x + text_size * 2 + text_size * 6 * i, y + text_size * 2, text_size, text_color);
+
+        }
+
+    }
+
+};
+
+void handle_buttons(SDL_Surface* surface, std::vector<button>* button) {
+
+    for (int i = 0; i < (*button).size(); i++) {
+
+        (* button)[i].draw(surface);
+
+    }
+
+}
