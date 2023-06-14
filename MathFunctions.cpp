@@ -1,5 +1,9 @@
 //useful mathematical functions
 
+#include <cstdlib>
+#include <stdlib.h>
+#include <cstdint>
+
 float random_float(float min, float max) {
     float random = ((float)rand()) / (float)RAND_MAX;
     float range = max - min;

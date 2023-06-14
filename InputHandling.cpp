@@ -1,3 +1,8 @@
+#include <unordered_map>
+#include <SDL.h>
+#include <string>
+#include <iostream>
+
 std::unordered_map<SDL_Keycode, int> key_map = {
         {SDLK_a, 0}, {SDLK_b, 1}, {SDLK_c, 2}, {SDLK_d, 3}, {SDLK_e, 4}, {SDLK_f, 5}, {SDLK_g, 6}, {SDLK_h, 7}, {SDLK_i, 8}, {SDLK_j, 9},
         {SDLK_k, 10}, {SDLK_l, 11}, {SDLK_m, 12}, {SDLK_n, 13}, {SDLK_o, 14}, {SDLK_p, 15}, {SDLK_q, 16}, {SDLK_r, 17}, {SDLK_s, 18}, {SDLK_t, 19},

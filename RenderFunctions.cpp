@@ -1,5 +1,10 @@
 //useful functions for drawing various shapes
 
+#include <SDL_gesture.h>
+#include <corecrt_math.h>
+#include <xhash>
+#include <string>
+
 void setPixelColor(SDL_Surface* surface, int x, int y, Uint32 color) {
 
     Uint32* pixels = (Uint32*)surface->pixels;
