@@ -34,7 +34,9 @@ char input_to_char(input input) {
             auto it = char_map.find(i);
             if (it != char_map.end()) {
                 c = it->second;
-                return c;
+                if (input.key_reset[i]) {
+                    return c;
+                }
             }
         }
 
@@ -133,8 +135,6 @@ void handle_textboxes(SDL_Surface* surface, std::vector<textbox>* textbox, int* 
             (*textbox)[*active_textbox].draw_active(surface);
         }
     }
-
-    draw_char(surface, input_to_char(*current_input), 100, 100, 10, 0x666666);
 
     if (char_to_int(input_to_char(*current_input)) != -1) {
         if ((*current_input).key_reset[char_to_int(input_to_char(*current_input))]) {

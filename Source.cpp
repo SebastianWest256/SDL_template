@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <unordered_map>
+#include <fstream>
 #include "MathFunctions.cpp"
 #include "RenderFunctions.cpp"
 #include "InputHandling.cpp"
@@ -12,9 +13,12 @@
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 800;
 const int FPS = 60;
-const int frameDelay = 1000 / FPS;
+const int FRAME_DELAY = 1000 / FPS;
 
-
+const std::vector<std::string> ASSET_NAMES{ 
+    "asset_gravel",
+    "asset_grass" ,
+};
 
 void initialize_SDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -42,10 +46,8 @@ SDL_Surface* get_window_surface(SDL_Window* window) {
 input handle_events(bool& running, input current_input) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (current_input.mouse_pressed == true) {
             current_input.mouse_x = event.button.x;
             current_input.mouse_y = event.button.y;
-        }
         if (event.type == SDL_QUIT) {
             running = false;
         }
@@ -96,18 +98,23 @@ int main(int argc, char* argv[]) {
 
     //init start
 
-    std::vector<textbox> textbox(std::vector<textbox>(3));
-    textbox[0].init(400, 400, 4, 11, 0xBBBBBB, 0x777777, 0x444444);
-    textbox[1].init(400, 200, 7, 5, 0xBBBBBB, 0x777777, 0x444444);
-    textbox[2].init(100, 600, 3, 30, 0xBBBBBB, 0x777777, 0x444444);
     int active_textbox = -1;
     bool using_textbox = false;
 
+    std::vector<textbox> textbox(std::vector<textbox>(3));
+
+    textbox[0].init(500, 100, 5, 10, 0xBBBBBB, 0x888888, 0x666666);
+    textbox[1].init(200, 400, 5, 15, 0xBBBBBB, 0x888888, 0x666666);
+
     std::vector<button> button(std::vector<button>(3));
 
-    button[0].init(500, 500, 3, "HEY", 0xBBBBBB, 0x777777, 0x444444);
-    button[1].init(600, 500, 4, "EZZ", 0xBBBBBB, 0x777777, 0x444444);
-    button[2].init(700, 500, 5, "999", 0xBBBBBB, 0x777777, 0x444444);
+    std::vector<std::vector<std::string>> world(10, std::vector<std::string>(10));
+
+    for (int i = 0; i < world[0].size(); i++) {
+        for (int j = 0; j < world.size(); j++) {
+            world[j][i] = ASSET_NAMES[int(random_float(0, 1.9999))];
+        }
+    }
 
     //init end
 
@@ -119,20 +126,24 @@ int main(int argc, char* argv[]) {
         frameStart = SDL_GetTicks();
 
         //loop start
-
+        
         draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
+       
+        draw_world(screen, world, 10, 10, 1);
 
         handle_buttons(screen, &button);
 
         handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
+
+        draw_asset(screen, "testing_asset", 300, 300, 5);
 
         //loop end
 
         SDL_UpdateWindowSurface(window);
 
         frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime) {
-            SDL_Delay(frameDelay - frameTime);
+        if (FRAME_DELAY > frameTime) {
+            SDL_Delay(FRAME_DELAY - frameTime);
         }
 
         current_input = handle_events(running, current_input);
