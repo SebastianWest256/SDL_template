@@ -45,43 +45,4 @@ double logarithm(double base, double x) {
     return log(x) / log(base);
 }
 
-struct input {
-    bool mouse_pressed = false;
-    int mouse_x = 0;
-    int mouse_y = 0;
-    std::vector<bool> key_pressed;
-    std::vector<bool> key_reset;
-    input() : key_pressed(38, false), key_reset(key_pressed.size(), true) {}
-};
 
-std::unordered_map<int, char> char_map = {
-        {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}, {8, 'I'}, {9, 'J'}, {10, 'K'}, {11, 'L'}, {12, 'M'}, {13, 'N'}, 
-        {14, 'O'}, {15, 'P'}, {16, 'Q'}, {17, 'R'}, {18, 'S'}, {19, 'T'}, {20, 'U'}, {21, 'V'}, {22, 'W'}, {23, 'X'}, {24, 'Y'}, {25, 'Z'}, {26, '0'}, 
-        {27, '1'}, {28, '2'}, {29, '3'}, {30, '4'}, {31, '5'}, {32, '6'}, {33, '7'}, {34, '8'}, {35, '9'}, {36, ' '}, {37, '.'}
-};
-
-char input_to_char(input input) {
-    char c;
-    for (int i = 0; i < input.key_pressed.size(); i++) {
-
-        if (input.key_pressed[i]) {
-            auto it = char_map.find(i);
-            if (it != char_map.end()) {
-                c = it->second;
-                return c;
-            }
-        }
-
-    }
-    return NULL;
-
-}
-
-int char_to_int(char c) {
-    for (const auto& pair : char_map) {
-        if (pair.second == c) {
-            return pair.first;
-        }
-    }
-    return -1; 
-}

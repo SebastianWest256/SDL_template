@@ -7,18 +7,14 @@
 #include <unordered_map>
 #include "MathFunctions.cpp"
 #include "RenderFunctions.cpp"
+#include "InputHandling.cpp"
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 800;
 const int FPS = 60;
 const int frameDelay = 1000 / FPS;
 
-std::unordered_map<SDL_Keycode, int> key_map = {
-        {SDLK_a, 0}, {SDLK_b, 1}, {SDLK_c, 2}, {SDLK_d, 3}, {SDLK_e, 4}, {SDLK_f, 5}, {SDLK_g, 6}, {SDLK_h, 7}, {SDLK_i, 8}, {SDLK_j, 9},
-        {SDLK_k, 10}, {SDLK_l, 11}, {SDLK_m, 12}, {SDLK_n, 13}, {SDLK_o, 14}, {SDLK_p, 15}, {SDLK_q, 16}, {SDLK_r, 17}, {SDLK_s, 18}, {SDLK_t, 19},
-        {SDLK_u, 20}, {SDLK_v, 21}, {SDLK_w, 22}, {SDLK_x, 23}, {SDLK_y, 24}, {SDLK_z, 25}, {SDLK_0, 26}, {SDLK_1, 27}, {SDLK_2, 28}, {SDLK_3, 29}, 
-        {SDLK_4, 30}, {SDLK_5, 31}, {SDLK_6, 32}, {SDLK_7, 33}, {SDLK_8, 34}, {SDLK_9, 35}, {SDLK_SPACE, 36}, {SDLK_PERIOD, 37}
-};
+
 
 void initialize_SDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -101,8 +97,11 @@ int main(int argc, char* argv[]) {
 
     //init start
 
-    
-
+    std::vector<textbox> textbox(std::vector<textbox>(2));
+    textbox[0].init(400, 400, 4, 11, 0xBBBBBB, 0x777777, 0x444444);
+    textbox[1].init(400, 200, 7, 5, 0xBBBBBB, 0x777777, 0x444444);
+    int active_textbox = -1;
+    bool using_textbox = false;
     //init end
 
     SDL_UpdateWindowSurface(window);
@@ -116,14 +115,7 @@ int main(int argc, char* argv[]) {
 
         draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
 
-        draw_char(screen, input_to_char(current_input), 100, 100, 10, 0x666666);
-
-        if (char_to_int(input_to_char(current_input)) != -1) {
-            if (current_input.key_reset[char_to_int(input_to_char(current_input))]) {
-                std::cout << input_to_char(current_input) << std::endl;
-                current_input.key_reset[char_to_int(input_to_char(current_input))] = false;
-            }
-        }
+        handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
 
         //loop end
 
