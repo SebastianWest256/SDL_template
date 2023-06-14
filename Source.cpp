@@ -81,6 +81,26 @@ input handle_events(bool& running, input current_input) {
     return current_input;
 }
 
+void load_textures(std::vector<std::vector<Uint32>>* texture) {
+    std::string file_name;
+    int line_counter;
+
+    for (int i = 0; i < ASSET_NAMES.size(); i++) {
+        file_name = ASSET_NAMES[i];
+        file_name += ".txt";
+        std::ifstream inputFile(file_name);
+        if (inputFile.is_open()) {
+            std::string line;
+            line_counter = 0;
+            while (std::getline(inputFile, line)) {
+                (*texture)[i][line_counter] = std::stoi(line);
+                line_counter++;
+            }
+            inputFile.close();
+        }
+    }
+}
+
 void clean_up(SDL_Window* window) {
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -123,29 +143,14 @@ int main(int argc, char* argv[]) {
             world[j][i] = int(random_float(0, 1.9999));
         }
     }
+
     auto now = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
 
     std::vector<std::vector<Uint32>> texture(ASSET_NAMES.size(), std::vector<Uint32>(256));
 
-    std::string file_name;
-    int line_counter;
-
-    for (int i = 0; i < ASSET_NAMES.size(); i++) {
-        file_name = ASSET_NAMES[i];
-        file_name += ".txt";
-        std::ifstream inputFile(file_name);
-        if (inputFile.is_open()) {
-            std::string line;
-            line_counter = 0;
-            while (std::getline(inputFile, line)) {
-                texture[i][line_counter] = std::stoi(line);
-                line_counter++;
-            }
-            inputFile.close();
-        }
-    }
-   
+    
+    load_textures(&texture);
 
     //init end
 
