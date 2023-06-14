@@ -707,8 +707,18 @@ void draw_string(SDL_Surface* surface, std::string s, int x, int y, int size, Ui
 
 }
 
-void draw_asset(SDL_Surface* surface, std::string file_name, int x, int y, int pixel_size) {
+void draw_asset(SDL_Surface* surface,std::vector<Uint32> color, int x, int y, int pixel_size) {
 
+    int line_counter = 0;
+
+    for (int i = 0; i < 256; i++) {
+        if (color[line_counter] != 100000000) {
+            draw_square(surface, (line_counter % 16) * pixel_size + x, ((line_counter - line_counter % 16) / 16) * pixel_size + y, pixel_size, color[line_counter]);
+        }
+            line_counter++;
+    }
+
+    /*
     int line_counter;
     file_name += ".txt";
     std::ifstream inputFile(file_name);
@@ -723,15 +733,16 @@ void draw_asset(SDL_Surface* surface, std::string file_name, int x, int y, int p
         }
         inputFile.close();
     }
+    */
 
 }
 
-void draw_world(SDL_Surface* surface, std::vector<std::vector<std::string>> world, int x, int y, int pixel_size) {
+void draw_world(SDL_Surface* surface, std::vector<std::vector<Uint32>> texture, std::vector<std::vector<Uint32>> world, int x, int y, int pixel_size) {
 
     for (int i = 0; i < world[0].size(); i++) {
         for (int j = 0; j < world.size(); j++) {
 
-            draw_asset(surface, world[j][i], x + j * pixel_size * 16, y + i * pixel_size * 16, pixel_size);
+            draw_asset(surface, texture[world[j][i]], x + j * pixel_size * 16, y + i * pixel_size * 16, pixel_size);
 
         }
     }

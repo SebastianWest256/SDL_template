@@ -6,6 +6,8 @@
 #include <vector>
 #include <unordered_map>
 #include <fstream>
+#include <string>
+#include <chrono>
 #include "MathFunctions.cpp"
 #include "RenderFunctions.cpp"
 #include "InputHandling.cpp"
@@ -18,6 +20,7 @@ const int FRAME_DELAY = 1000 / FPS;
 const std::vector<std::string> ASSET_NAMES{ 
     "asset_gravel",
     "asset_grass" ,
+    "testing_asset" ,
 };
 
 void initialize_SDL() {
@@ -98,6 +101,9 @@ int main(int argc, char* argv[]) {
 
     //init start
 
+    auto start = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds duration, last_duration;
+
     int active_textbox = -1;
     bool using_textbox = false;
 
@@ -108,13 +114,37 @@ int main(int argc, char* argv[]) {
 
     std::vector<button> button(std::vector<button>(3));
 
-    std::vector<std::vector<std::string>> world(10, std::vector<std::string>(10));
+    std::vector<std::vector<Uint32>> world(20, std::vector<Uint32>(30 ));
 
     for (int i = 0; i < world[0].size(); i++) {
         for (int j = 0; j < world.size(); j++) {
-            world[j][i] = ASSET_NAMES[int(random_float(0, 1.9999))];
+            world[j][i] = int(random_float(0, 1.9999));
         }
     }
+    auto now = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+
+    std::vector<std::vector<Uint32>> texture(ASSET_NAMES.size(), std::vector<Uint32>(256));
+
+    std::string file_name;
+    int line_counter;
+
+    for (int i = 0; i < ASSET_NAMES.size(); i++) {
+        file_name = ASSET_NAMES[i];
+        file_name += ".txt";
+        std::ifstream inputFile(file_name);
+        if (inputFile.is_open()) {
+            std::string line;
+            line_counter = 0;
+            while (std::getline(inputFile, line)) {
+                texture[i][line_counter] = std::stoi(line);
+                line_counter++;
+            }
+            inputFile.close();
+        }
+
+    }
+   
 
     //init end
 
@@ -127,15 +157,22 @@ int main(int argc, char* argv[]) {
 
         //loop start
         
+        auto now = std::chrono::high_resolution_clock::now();
+        last_duration = duration;
+        duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+       
+
+        std::cout << duration.count() - last_duration.count() << std::endl;
+
         draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
        
-        draw_world(screen, world, 10, 10, 1);
+        draw_world(screen, texture, world, 10, 10, 1);
 
         handle_buttons(screen, &button);
-
+         
         handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
 
-        draw_asset(screen, "testing_asset", 300, 300, 5);
+        draw_asset(screen, texture[2], 300, 300, 5);
 
         //loop end
 

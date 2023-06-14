@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <cstdint>
+#include <string>
 
 float random_float(float min, float max) {
     float random = ((float)rand()) / (float)RAND_MAX;
@@ -47,6 +48,17 @@ float map(float input, float inputMin, float inputMax, float targetMin, float ta
 
 double logarithm(double base, double x) {
     return log(x) / log(base);
+}
+
+bool is_integer(const std::string& str) {
+    try {
+        size_t pos = 0;
+        int value = std::stoi(str, &pos);
+        return pos == str.length();
+    }
+    catch (...) {
+        return false; 
+    }
 }
 
 
