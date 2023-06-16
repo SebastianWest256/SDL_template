@@ -5,6 +5,10 @@
 #include <cstdint>
 #include <string>
 
+struct cell {
+    Uint32 texture;
+};
+
 float random_float(float min, float max) {
     float random = ((float)rand()) / (float)RAND_MAX;
     float range = max - min;
@@ -60,5 +64,4 @@ bool is_integer(const std::string& str) {
         return false; 
     }
 }
-
 

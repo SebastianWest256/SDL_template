@@ -8,20 +8,26 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <optional>
 #include "MathFunctions.cpp"
 #include "RenderFunctions.cpp"
 #include "InputHandling.cpp"
 
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 1800;
+const int SCREEN_HEIGHT = 1000;
 const int FPS = 60;
 const int FRAME_DELAY = 1000 / FPS;
 
-const std::vector<std::string> ASSET_NAMES{ 
-    "asset_gravel",
-    "asset_grass" ,
-    "testing_asset" ,
+const std::vector<std::string> ASSET_NAMES{
+    "asset_dirt_0",
+    "asset_dirt_1" ,
+    "asset_dirt_2" ,
+    "asset_dirt_3" ,
+    "asset_stone_0" ,
+    "asset_goblin_sword" ,
 };
+
+
 
 void initialize_SDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -50,8 +56,8 @@ input handle_events(bool& running, input current_input) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (current_input.mouse_pressed)current_input.mouse_reset = false;
-            current_input.mouse_x = event.button.x;
-            current_input.mouse_y = event.button.y;
+        current_input.mouse_x = event.button.x;
+        current_input.mouse_y = event.button.y;
         if (event.type == SDL_QUIT) {
             running = false;
         }
@@ -123,33 +129,29 @@ int main(int argc, char* argv[]) {
 
     //init start
 
+    std::vector<std::vector<cell>> world(29, std::vector<cell>(20));
+
+    for (int i = 0; i < world[0].size(); i++) {
+        for (int j = 0; j < world.size(); j++) {
+            world[j][i].texture = int(random_float(0,3.9999));
+        }
+    }
+
     auto start = std::chrono::high_resolution_clock::now();
     std::chrono::milliseconds duration, last_duration;
 
     int active_textbox = -1;
     bool using_textbox = false;
 
-    std::vector<textbox> textbox(std::vector<textbox>(3));
+    std::vector<textbox> textbox(std::vector<textbox>(0));
 
-    textbox[0].init(500, 100, 5, 10, 0xBBBBBB, 0x888888, 0x666666);
-    textbox[1].init(200, 400, 5, 15, 0xBBBBBB, 0x888888, 0x666666);
-
-    std::vector<button> button(std::vector<button>(3));
-
-    std::vector<std::vector<Uint32>> world(20, std::vector<Uint32>(30 ));
-
-    for (int i = 0; i < world[0].size(); i++) {
-        for (int j = 0; j < world.size(); j++) {
-            world[j][i] = int(random_float(0, 1.9999));
-        }
-    }
+    std::vector<button> button(std::vector<button>(0));
 
     auto now = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
 
     std::vector<std::vector<Uint32>> texture(ASSET_NAMES.size(), std::vector<Uint32>(256));
 
-    
     load_textures(&texture);
 
     //init end
@@ -166,18 +168,18 @@ int main(int argc, char* argv[]) {
         auto now = std::chrono::high_resolution_clock::now();
         last_duration = duration;
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
-       
+
         std::cout << duration.count() - last_duration.count() << "ms" << std::endl;
 
-        draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0xDD9955);
-       
-        draw_world(screen, texture, world, 10, 10, 1);
+        draw_rectangle(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x555555);
+
+        draw_world(screen, texture, world, 200, 20, 3);
+
+        draw_asset(screen, texture[5], 400, 250, 7);
 
         handle_buttons(screen, &button);
-         
-        handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
 
-        draw_asset(screen, texture[2], 300, 300, 5);
+        handle_textboxes(screen, &textbox, &active_textbox, &using_textbox, &current_input);
 
         //loop end
 
