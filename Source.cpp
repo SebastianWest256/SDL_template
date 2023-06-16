@@ -8,7 +8,6 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-#include <optional>
 #include "MathFunctions.cpp"
 #include "RenderFunctions.cpp"
 #include "InputHandling.cpp"
@@ -19,12 +18,12 @@ const int FPS = 60;
 const int FRAME_DELAY = 1000 / FPS;
 
 const std::vector<std::string> ASSET_NAMES{
-    "asset_dirt_0",
-    "asset_dirt_1" ,
-    "asset_dirt_2" ,
-    "asset_dirt_3" ,
-    "asset_stone_0" ,
-    "asset_goblin_sword" ,
+    "assets/dirt_0",
+    "assets/dirt_1" ,
+    "assets/dirt_2" ,
+    "assets/dirt_3" ,
+    "assets/stone_0" ,
+    "assets/goblin_sword" ,
 };
 
 
